@@ -4,6 +4,7 @@ namespace RIterator;
 
 class Option {
 
+	private static $none_instance;
 	private $value;
 	private $is_some;
 
@@ -24,7 +25,8 @@ class Option {
 	 * @return static
 	 */
 	public static function createNone() {
-		return new static(false);
+		return static::$none_instance
+			?? static::$none_instance = new static(false);
 	}
 
 	public function isSome(): bool {
