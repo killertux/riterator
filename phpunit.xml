@@ -8,7 +8,7 @@
 >
     <testsuites>
         <testsuite name="Default Test Suite">
-            <directory>test/</directory>
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
