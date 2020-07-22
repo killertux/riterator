@@ -9,7 +9,7 @@ use RIterator\Option;
 class Enumerate extends Iterator {
 
 	/** @var int */
-	private $enumerate = 0;
+	private $enumeration = 0;
 	/** @var IteratorInterface */
 	private $iterator;
 
@@ -20,7 +20,7 @@ class Enumerate extends Iterator {
 	public function next(): Option {
 		$value = $this->iterator->next();
 		if ($value->isSome()) {
-			return Option::createSome([$this->enumerate++, $value->unwrap()]);
+			return Option::createSome([$this->enumeration++, $value->unwrap()]);
 		}
 		return Option::createNone();
 	}

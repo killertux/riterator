@@ -49,7 +49,7 @@ class Flatten extends Iterator {
 			return $this->handleFlattening();
 		}
 
-		if ($value instanceof Iterator) {
+		if ($value instanceof IteratorInterface) {
 			$this->setUpRIteratorFlattening($value);
 			return $this->handleFlattening();
 		}
@@ -85,7 +85,7 @@ class Flatten extends Iterator {
 		$this->temp_iterator = new GeneratorRIterator($generator($value));
 	}
 
-	private function setUpRIteratorFlattening(Iterator $value): void {
+	private function setUpRIteratorFlattening(IteratorInterface $value): void {
 		$this->flattening = true;
 		$this->temp_iterator = $value;
 	}
