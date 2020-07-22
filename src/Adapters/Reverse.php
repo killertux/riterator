@@ -1,6 +1,10 @@
 <?php
 
-namespace RIterator;
+namespace RIterator\Adapters;
+
+use RIterator\DoubleEndedIterator;
+use RIterator\DoubleEndedIteratorInterface;
+use RIterator\Option;
 
 class Reverse extends DoubleEndedIterator {
 

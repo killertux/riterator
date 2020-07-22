@@ -1,18 +1,18 @@
 <?php
 
-namespace RIterator\RIteratorAdapters;
+namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
 use RIterator\Option;
 
-class Skip extends Iterator {
+class Take extends Iterator {
 
 	/** @var IteratorInterface */
 	private $iterator;
 	/** @var int */
 	private $n;
-	private $should_skip = true;
+	private $should_take = true;
 
 	public function __construct(IteratorInterface $iterator, int $n) {
 		$this->iterator = $iterator;
@@ -20,12 +20,14 @@ class Skip extends Iterator {
 	}
 
 	public function next(): Option {
-		if ($this->should_skip) {
-			$this->should_skip = false;
-			for ($i = 0; $i < $this->n; $i++) {
-				$this->iterator->next();
+		if ($this->should_take) {
+			$value = $this->iterator->next();
+			$this->n--;
+			if ($this->n === 0) {
+				$this->should_take = false;
 			}
+			return $value;
 		}
-		return $this->iterator->next();
+		return Option::createNone();
 	}
 }

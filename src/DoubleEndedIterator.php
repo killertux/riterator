@@ -2,6 +2,8 @@
 
 namespace RIterator;
 
+use RIterator\Adapters\Reverse;
+
 abstract class DoubleEndedIterator extends Iterator implements DoubleEndedIteratorInterface {
 
 	/**

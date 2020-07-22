@@ -1,18 +1,17 @@
 <?php
 
-namespace RIterator\RIteratorAdapters;
+namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
 use RIterator\Option;
 
-class TakeWhile extends Iterator {
+class Inspect extends Iterator {
 
 	/** @var IteratorInterface */
 	private $iterator;
 	/** @var callable */
 	private $closure;
-	private $taking = true;
 
 	public function __construct(IteratorInterface $iterator, callable $closure) {
 		$this->iterator = $iterator;
@@ -20,15 +19,12 @@ class TakeWhile extends Iterator {
 	}
 
 	public function next(): Option {
-		if (!$this->taking) {
-			return Option::createNone();
-		}
-		$closure = &$this->closure;
 		$value = $this->iterator->next();
-		if ($closure($value->unwrap())) {
+		if ($value->isSome()) {
+			$closure = &$this->closure;
+			$closure($value->unwrap());
 			return $value;
 		}
-		$this->taking = false;
 		return Option::createNone();
 	}
 }

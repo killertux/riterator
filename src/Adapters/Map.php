@@ -1,26 +1,28 @@
 <?php
 
-namespace RIterator\RIteratorAdapters;
+namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
 use RIterator\Option;
 
-class Enumerate extends Iterator {
+class Map extends Iterator {
 
-	/** @var int */
-	private $enumerate = 0;
 	/** @var IteratorInterface */
 	private $iterator;
+	/** @var callable */
+	private $closure;
 
-	public function __construct(IteratorInterface $iterator) {
+	public function __construct(IteratorInterface $iterator, callable $closure) {
 		$this->iterator = $iterator;
+		$this->closure = $closure;
 	}
 
 	public function next(): Option {
 		$value = $this->iterator->next();
+		$closure = &$this->closure;
 		if ($value->isSome()) {
-			return Option::createSome([$this->enumerate++, $value->unwrap()]);
+			return Option::createSome($closure($value->unwrap()));
 		}
 		return Option::createNone();
 	}

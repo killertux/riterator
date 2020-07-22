@@ -1,12 +1,12 @@
 <?php
 
-namespace RIterator\RIteratorAdapters;
+namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
 use RIterator\Option;
 
-class Inspect extends Iterator {
+class FilterMap extends Iterator {
 
 	/** @var IteratorInterface */
 	private $iterator;
@@ -19,11 +19,13 @@ class Inspect extends Iterator {
 	}
 
 	public function next(): Option {
-		$value = $this->iterator->next();
-		if ($value->isSome()) {
-			$closure = &$this->closure;
-			$closure($value->unwrap());
-			return $value;
+		$closure = &$this->closure;
+		while (($value = $this->iterator->next())->isSome()) {
+			/** @var Option $mapped_value */
+			$mapped_value = $closure($value->unwrap());
+			if ($mapped_value->isSome()) {
+				return $mapped_value;
+			}
 		}
 		return Option::createNone();
 	}

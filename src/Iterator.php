@@ -2,23 +2,23 @@
 
 namespace RIterator;
 
-use RIterator\RIteratorAdapters\Chain;
-use RIterator\RIteratorAdapters\Enumerate;
-use RIterator\RIteratorAdapters\Filter;
-use RIterator\RIteratorAdapters\FilterMap;
-use RIterator\RIteratorAdapters\FlatMap;
-use RIterator\RIteratorAdapters\Flatten;
-use RIterator\RIteratorAdapters\Fuse;
-use RIterator\RIteratorAdapters\Inspect;
-use RIterator\RIteratorAdapters\Map;
-use RIterator\RIteratorAdapters\Peekable;
-use RIterator\RIteratorAdapters\Scan;
-use RIterator\RIteratorAdapters\Skip;
-use RIterator\RIteratorAdapters\SkipWhile;
-use RIterator\RIteratorAdapters\StepBy;
-use RIterator\RIteratorAdapters\Take;
-use RIterator\RIteratorAdapters\TakeWhile;
-use RIterator\RIteratorAdapters\Zip;
+use RIterator\Adapters\Chain;
+use RIterator\Adapters\Enumerate;
+use RIterator\Adapters\Filter;
+use RIterator\Adapters\FilterMap;
+use RIterator\Adapters\FlatMap;
+use RIterator\Adapters\Flatten;
+use RIterator\Adapters\Fuse;
+use RIterator\Adapters\Inspect;
+use RIterator\Adapters\Map;
+use RIterator\Adapters\Peekable;
+use RIterator\Adapters\Scan;
+use RIterator\Adapters\Skip;
+use RIterator\Adapters\SkipWhile;
+use RIterator\Adapters\StepBy;
+use RIterator\Adapters\Take;
+use RIterator\Adapters\TakeWhile;
+use RIterator\Adapters\Zip;
 
 abstract class Iterator implements IteratorInterface {
 

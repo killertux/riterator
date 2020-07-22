@@ -1,30 +1,27 @@
 <?php
 
-namespace RIterator\RIteratorAdapters;
+namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
 use RIterator\Option;
 
-class Fuse extends Iterator {
+class Enumerate extends Iterator {
 
+	/** @var int */
+	private $enumerate = 0;
 	/** @var IteratorInterface */
 	private $iterator;
-	private $fused = false;
 
 	public function __construct(IteratorInterface $iterator) {
 		$this->iterator = $iterator;
 	}
 
 	public function next(): Option {
-		if ($this->fused) {
-			return Option::createNone();
-		}
 		$value = $this->iterator->next();
-		if ($value->isNone()) {
-			$this->fused = true;
-			return Option::createNone();
+		if ($value->isSome()) {
+			return Option::createSome([$this->enumerate++, $value->unwrap()]);
 		}
-		return $value;
+		return Option::createNone();
 	}
 }

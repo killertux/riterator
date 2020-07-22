@@ -3,7 +3,7 @@
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use RIterator\Option;
-use RIterator\PhpRIteratorsAdapters\GeneratorRIterator;
+use RIterator\PhpAdapters\GeneratorRIterator;
 
 class IteratorTest extends TestCase {
 
@@ -349,6 +349,6 @@ class IteratorTest extends TestCase {
 	}
 
 	private function createArrayIterator(array $array): \RIterator\Iterator {
-		return new \RIterator\PhpRIteratorsAdapters\ArrayRIterator($array);
+		return new \RIterator\PhpAdapters\ArrayRIterator($array);
 	}
 }

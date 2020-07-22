@@ -1,13 +1,13 @@
 <?php
 
-namespace RIterator\RIteratorAdapters;
+namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
 use RIterator\Option;
-use RIterator\PhpRIteratorsAdapters\ArrayRIterator;
-use RIterator\PhpRIteratorsAdapters\GeneratorRIterator;
-use RIterator\PhpRIteratorsAdapters\IteratorRIterator;
+use RIterator\PhpAdapters\ArrayRIterator;
+use RIterator\PhpAdapters\GeneratorRIterator;
+use RIterator\PhpAdapters\IteratorRIterator;
 
 class Flatten extends Iterator {
 

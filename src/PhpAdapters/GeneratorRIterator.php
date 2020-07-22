@@ -1,6 +1,6 @@
 <?php
 
-namespace RIterator\PhpRIteratorsAdapters;
+namespace RIterator\PhpAdapters;
 
 use RIterator\Iterator;
 use RIterator\Option;
