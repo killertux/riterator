@@ -16,15 +16,20 @@ class IteratorRIterator extends Iterator {
 	}
 
 	public function next(): Option {
-		if ($this->first_iteration) {
-			$this->first_iteration = false;
-			$this->iterator->rewind();
-		}
+		$this->doIteration();
 		if ($this->iterator->valid()) {
 			$value = $this->iterator->current();
-			$this->iterator->next();
 			return Option::createSome($value);
 		}
 		return Option::createNone();
+	}
+
+	private function doIteration(): void {
+		if ($this->first_iteration) {
+			$this->first_iteration = false;
+			$this->iterator->rewind();
+			return;
+		}
+		$this->iterator->next();
 	}
 }

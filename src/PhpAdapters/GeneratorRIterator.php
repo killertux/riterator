@@ -15,15 +15,20 @@ class GeneratorRIterator extends Iterator {
 	}
 
 	public function next(): Option {
-		if ($this->first_iteration) {
-			$this->first_iteration = false;
-			$this->generator->rewind();
-		}
+		$this->doIteration();
 		if ($this->generator->valid()) {
 			$value = $this->generator->current();
-			$this->generator->next();
 			return Option::createSome($value);
 		}
 		return Option::createNone();
+	}
+
+	private function doIteration(): void {
+		if ($this->first_iteration) {
+			$this->first_iteration = false;
+			$this->generator->rewind();
+			return;
+		}
+		$this->generator->next();
 	}
 }

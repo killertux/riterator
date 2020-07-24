@@ -37,6 +37,10 @@ class Option {
 		return !$this->is_some;
 	}
 
+	/**
+	 * @return mixed
+	 * @throws UnwrapNoneException
+	 */
 	public function unwrap() {
 		if ($this->is_some) {
 			return $this->value;
