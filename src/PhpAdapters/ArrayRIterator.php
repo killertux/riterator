@@ -8,37 +8,28 @@ use RIterator\Option;
 class ArrayRIterator extends DoubleEndedIterator {
 
 	private $array;
-	private $first_iteration = true;
 
 	public function __construct(array $array) {
 		$this->array = $array;
 	}
 
 	public function next(): Option {
-		if ($this->first_iteration) {
-			$this->first_iteration = false;
-			reset($this->array);
-			return $this->getValueFromPosition();
-		}
-		next($this->array);
-		return $this->getValueFromPosition();
+		$first_key = array_key_first($this->array);
+		return $this->getValueAndRemoveItFromKey($first_key);
 	}
 
 	public function nextBack(): Option {
-		if ($this->first_iteration) {
-			$this->first_iteration = false;
-			end($this->array);
-			return $this->getValueFromPosition();
-		}
-		prev($this->array);
-		return $this->getValueFromPosition();
+		$last_key = array_key_last($this->array);
+		return $this->getValueAndRemoveItFromKey($last_key);
 	}
 
-	private function getValueFromPosition(): Option {
-		$value = current($this->array);
-		if ($value === false && key($this->array) === null) {
+	private function getValueAndRemoveItFromKey($key): Option {
+		if ($key === null) {
 			return Option::createNone();
 		}
+		$value = $this->array[$key];
+		unset($this->array[$key]);
 		return Option::createSome($value);
 	}
+
 }
