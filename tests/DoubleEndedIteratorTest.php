@@ -13,6 +13,7 @@ class DoubleEndedIteratorTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals(4, $double_ended_iterator->nextBack()->unwrap());
 		$this->assertEquals(3, $double_ended_iterator->next()->unwrap());
 		$this->assertTrue($double_ended_iterator->nextBack()->isNone());
+		$this->assertTrue($double_ended_iterator->next()->isNone());
 	}
 
 	public function testReverse(): void {
