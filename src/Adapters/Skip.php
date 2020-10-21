@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Skip extends Iterator {
 
@@ -19,7 +18,8 @@ class Skip extends Iterator {
 		$this->n = $n;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		if ($this->should_skip) {
 			$this->should_skip = false;
 			for ($i = 0; $i < $this->n; $i++) {

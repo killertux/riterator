@@ -25,27 +25,28 @@ abstract class Iterator implements IteratorInterface {
 	/**
 	 * @inheritDoc
 	 */
-	abstract public function next(): Option;
+	abstract public function next();
 
 	public function collect(): array {
 		$collect = [];
-		while (($value = $this->next())->isSome()) {
-			$collect[] = $value->unwrap();
+		while (($value = $this->next()) !== null) {
+			$collect[] = $value;
 		}
 		return $collect;
 	}
 
 	public function count(): int {
 		$count = 0;
-		while ($this->next()->isSome()) {
+		while ($this->next() !== null) {
 			$count++;
 		}
 		return $count;
 	}
 
-	public function last(): Option {
-		$last = Option::createNone();
-		while (($value = $this->next())->isSome()) {
+	/** @return null|mixed */
+	public function last() {
+		$last = null;
+		while (($value = $this->next()) !== null) {
 			$last = $value;
 		}
 		return $last;
@@ -56,13 +57,13 @@ abstract class Iterator implements IteratorInterface {
 	 */
 	public function sum() {
 		$sum = 0;
-		while (($value = $this->next())->isSome()) {
-			$sum += $value->unwrap();
+		while (($value = $this->next()) !== null) {
+			$sum += $value;
 		}
 		return $sum;
 	}
 
-	public function nth(int $n): Option {
+	public function nth(int $n) {
 		for ($i = 0; $i < $n; $i++) {
 			$this->next();
 		}
@@ -86,8 +87,8 @@ abstract class Iterator implements IteratorInterface {
 	}
 
 	public function forEach(callable $closure): void {
-		while (($value = $this->next())->isSome()) {
-			$closure($value->unwrap());
+		while (($value = $this->next()) !== null) {
+			$closure($value);
 		}
 	}
 
@@ -146,27 +147,26 @@ abstract class Iterator implements IteratorInterface {
 	public function partition(callable $closure): array {
 		$partition_true = [];
 		$partition_false = [];
-		while (($value = $this->next())->isSome()) {
-			$unwraped_value = $value->unwrap();
-			if ($closure($unwraped_value)) {
-				$partition_true[] = $unwraped_value;
+		while (($value = $this->next()) !== null) {
+			if ($closure($value)) {
+				$partition_true[] = $value;
 			} else {
-				$partition_false[] = $unwraped_value;
+				$partition_false[] = $value;
 			}
 		}
 		return [$partition_true, $partition_false];
 	}
 
 	public function fold($acc, callable $closure) {
-		while (($value = $this->next())->isSome()) {
-			$acc = $closure($acc, $value->unwrap());
+		while (($value = $this->next()) !== null) {
+			$acc = $closure($acc, $value);
 		}
 		return $acc;
 	}
 
 	public function all(callable $closure): bool {
-		while (($value = $this->next())->isSome()) {
-			if (!$closure($value->unwrap())) {
+		while (($value = $this->next()) !== null) {
+			if (!$closure($value)) {
 				return false;
 			}
 		}
@@ -174,42 +174,36 @@ abstract class Iterator implements IteratorInterface {
 	}
 
 	public function any(callable $closure): bool {
-		while (($value = $this->next())->isSome()) {
-			if ($closure($value->unwrap())) {
+		while (($value = $this->next()) !== null) {
+			if ($closure($value)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public function find(callable $closure): Option {
-		while (($value = $this->next())->isSome()) {
-			if ($closure($value->unwrap())) {
+	public function find(callable $closure) {
+		while (($value = $this->next()) !== null) {
+			if ($closure($value)) {
 				return $value;
 			}
 		}
-		return Option::createNone();
+		return null;
 	}
 
-	public function findMap(callable $closure): Option {
-		$iterator = new Map($this, $closure);
-		while (($value = $iterator->next())->isSome()) {
-			$unwraped_value = $value->unwrap();
-			if ($unwraped_value->isSome()) {
-				return $unwraped_value;
-			}
-		}
-		return Option::createNone();
+	public function findMap(callable $closure) {
+		return (new FilterMap($this, $closure))
+			->next();
 	}
 
-	public function position(callable $closure): Option {
+	public function position(callable $closure) {
 		$index = 0;
-		while (($value = $this->next())->isSome()) {
-			if ($closure($value->unwrap())) {
-				return Option::createSome($index);
+		while (($value = $this->next()) !== null) {
+			if ($closure($value)) {
+				return $index;
 			}
 			$index++;
 		}
-		return Option::createNone();
+		return null;
 	}
 }

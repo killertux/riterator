@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class FilterMap extends Iterator {
 
@@ -18,15 +17,15 @@ class FilterMap extends Iterator {
 		$this->closure = $closure;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		$closure = &$this->closure;
-		while (($value = $this->iterator->next())->isSome()) {
-			/** @var Option $mapped_value */
-			$mapped_value = $closure($value->unwrap());
-			if ($mapped_value->isSome()) {
+		while (($value = $this->iterator->next()) !== null) {
+			$mapped_value = $closure($value);
+			if ($mapped_value !== null) {
 				return $mapped_value;
 			}
 		}
-		return Option::createNone();
+		return null;
 	}
 }

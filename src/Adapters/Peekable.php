@@ -14,20 +14,22 @@ class Peekable extends Iterator {
 
 	public function __construct(IteratorInterface $iterator) {
 		$this->iterator = $iterator;
-		$this->next_value = Option::createNone();
+		$this->next_value = null;
 	}
 
-	public function next(): Option {
-		if ($this->next_value->isNone()) {
+	/** @inheritDoc */
+	public function next() {
+		if ($this->next_value === null) {
 			$this->next_value = $this->iterator->next();
 		}
 		$next_value = $this->next_value;
-		$this->next_value = Option::createNone();
+		$this->next_value = null;
 		return $next_value;
 	}
 
-	public function peek(): Option {
-		if ($this->next_value->isNone()) {
+	/** @return null|mixed */
+	public function peek() {
+		if ($this->next_value === null) {
 			$this->next_value = $this->iterator->next();
 		}
 		return $this->next_value;

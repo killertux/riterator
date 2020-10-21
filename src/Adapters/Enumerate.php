@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Enumerate extends Iterator {
 
@@ -17,11 +16,12 @@ class Enumerate extends Iterator {
 		$this->iterator = $iterator;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		$value = $this->iterator->next();
-		if ($value->isSome()) {
-			return Option::createSome([$this->enumeration++, $value->unwrap()]);
+		if ($value !== null) {
+			return [$this->enumeration++, $value];
 		}
-		return Option::createNone();
+		return null;
 	}
 }

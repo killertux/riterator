@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 use RIterator\PhpAdapters\ArrayRIterator;
 use RIterator\PhpAdapters\GeneratorRIterator;
 use RIterator\PhpAdapters\IteratorRIterator;
@@ -22,18 +21,19 @@ class Flatten extends Iterator {
 		$this->iterator = $iterator;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		if ($this->flattening) {
 			return $this->handleFlattening();
 		}
 		$value = $this->iterator->next();
-		if ($value->isSome()) {
-			return $this->returnValueOrHandleFlattening($value->unwrap());
+		if ($value !== null) {
+			return $this->returnValueOrHandleFlattening($value);
 		}
-		return Option::createNone();
+		return null;
 	}
 
-	private function returnValueOrHandleFlattening($value): Option {
+	private function returnValueOrHandleFlattening($value) {
 		if (is_array($value)) {
 			$this->setUpArrayFlattening($value);
 			return $this->handleFlattening();
@@ -53,12 +53,12 @@ class Flatten extends Iterator {
 			$this->setUpRIteratorFlattening($value);
 			return $this->handleFlattening();
 		}
-		return Option::createSome($value);
+		return $value;
 	}
 
-	private function handleFlattening(): Option {
+	private function handleFlattening() {
 		$value = $this->temp_iterator->next();
-		if ($value->isNone()) {
+		if ($value === null) {
 			$this->flattening = false;
 			return $this->next();
 		}

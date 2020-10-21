@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Chain extends Iterator {
 
@@ -19,16 +18,17 @@ class Chain extends Iterator {
 		$this->iterator_2 = $iterator_2;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		if (!$this->first_iterator_finished) {
 			return $this->getNextFromFirstIterator();
 		}
 		return $this->iterator_2->next();
 	}
 
-	private function getNextFromFirstIterator(): Option {
+	private function getNextFromFirstIterator() {
 		$value = $this->iterator_1->next();
-		if ($value->isNone()) {
+		if ($value === null) {
 			$this->first_iterator_finished = true;
 			return $this->next();
 		}

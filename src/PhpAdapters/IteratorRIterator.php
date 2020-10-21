@@ -3,7 +3,6 @@
 namespace RIterator\PhpAdapters;
 
 use RIterator\Iterator;
-use RIterator\Option;
 
 class IteratorRIterator extends Iterator {
 
@@ -15,13 +14,12 @@ class IteratorRIterator extends Iterator {
 		$this->iterator = $iterator;
 	}
 
-	public function next(): Option {
+	public function next() {
 		$this->doIteration();
 		if ($this->iterator->valid()) {
-			$value = $this->iterator->current();
-			return Option::createSome($value);
+			return $this->iterator->current();
 		}
-		return Option::createNone();
+		return null;
 	}
 
 	private function doIteration(): void {

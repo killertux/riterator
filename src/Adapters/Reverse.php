@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\DoubleEndedIterator;
 use RIterator\DoubleEndedIteratorInterface;
-use RIterator\Option;
 
 class Reverse extends DoubleEndedIterator {
 
@@ -15,11 +14,13 @@ class Reverse extends DoubleEndedIterator {
 		$this->iterator = $iterator;
 	}
 
-	public function nextBack(): Option {
+	/** @inheritDoc */
+	public function nextBack() {
 		return $this->iterator->next();
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		return $this->iterator->nextBack();
 	}
 }

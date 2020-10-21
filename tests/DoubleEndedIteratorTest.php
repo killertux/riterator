@@ -1,19 +1,18 @@
 <?php
 
 use PHPUnit\Framework\Assert;
-use RIterator\DoubleEndedIterator;
 
 class DoubleEndedIteratorTest extends \PHPUnit\Framework\TestCase {
 
 	public function testNextAndNextBack(): void {
 		$double_ended_iterator = new \RIterator\PhpAdapters\ArrayRIterator([1, 2, 3 ,4 ,5]);
-		$this->assertEquals(1, $double_ended_iterator->next()->unwrap());
-		$this->assertEquals(5, $double_ended_iterator->nextBack()->unwrap());
-		$this->assertEquals(2, $double_ended_iterator->next()->unwrap());
-		$this->assertEquals(4, $double_ended_iterator->nextBack()->unwrap());
-		$this->assertEquals(3, $double_ended_iterator->next()->unwrap());
-		$this->assertTrue($double_ended_iterator->nextBack()->isNone());
-		$this->assertTrue($double_ended_iterator->next()->isNone());
+		$this->assertEquals(1, $double_ended_iterator->next());
+		$this->assertEquals(5, $double_ended_iterator->nextBack());
+		$this->assertEquals(2, $double_ended_iterator->next());
+		$this->assertEquals(4, $double_ended_iterator->nextBack());
+		$this->assertEquals(3, $double_ended_iterator->next());
+		$this->assertNull($double_ended_iterator->nextBack());
+		$this->assertNull($double_ended_iterator->next());
 	}
 
 	public function testReverse(): void {

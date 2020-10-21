@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Take extends Iterator {
 
@@ -19,7 +18,8 @@ class Take extends Iterator {
 		$this->n = $n;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		if ($this->should_take) {
 			$value = $this->iterator->next();
 			$this->n--;
@@ -28,6 +28,6 @@ class Take extends Iterator {
 			}
 			return $value;
 		}
-		return Option::createNone();
+		return null;
 	}
 }

@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class StepBy extends Iterator {
 
@@ -22,7 +21,8 @@ class StepBy extends Iterator {
 		$this->n = $n;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		if ($this->first_iteration) {
 			$this->first_iteration = false;
 			return $this->iterator->next();

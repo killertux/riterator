@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class FlatMap extends Iterator {
 
@@ -15,7 +14,8 @@ class FlatMap extends Iterator {
 		$this->iterator = new Flatten(new Map($iterator, $closure));
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		return $this->iterator->next();
 	}
 }

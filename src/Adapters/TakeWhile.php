@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class TakeWhile extends Iterator {
 
@@ -19,16 +18,17 @@ class TakeWhile extends Iterator {
 		$this->closure = $closure;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		if (!$this->taking) {
-			return Option::createNone();
+			return null;
 		}
 		$closure = &$this->closure;
 		$value = $this->iterator->next();
-		if ($closure($value->unwrap())) {
+		if ($closure($value)) {
 			return $value;
 		}
 		$this->taking = false;
-		return Option::createNone();
+		return null;
 	}
 }

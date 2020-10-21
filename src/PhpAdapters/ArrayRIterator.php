@@ -3,7 +3,6 @@
 namespace RIterator\PhpAdapters;
 
 use RIterator\DoubleEndedIterator;
-use RIterator\Option;
 
 class ArrayRIterator extends DoubleEndedIterator {
 
@@ -13,23 +12,29 @@ class ArrayRIterator extends DoubleEndedIterator {
 		$this->array = $array;
 	}
 
-	public function next(): Option {
+	/**
+	 * @inheritDoc
+	 */
+	public function next() {
 		$first_key = array_key_first($this->array);
 		return $this->getValueAndRemoveItFromKey($first_key);
 	}
 
-	public function nextBack(): Option {
+	/**
+	 * @inheritDoc
+	 */
+	public function nextBack() {
 		$last_key = array_key_last($this->array);
 		return $this->getValueAndRemoveItFromKey($last_key);
 	}
 
-	private function getValueAndRemoveItFromKey($key): Option {
+	private function getValueAndRemoveItFromKey($key) {
 		if ($key === null) {
-			return Option::createNone();
+			return null;
 		}
 		$value = $this->array[$key];
 		unset($this->array[$key]);
-		return Option::createSome($value);
+		return $value;
 	}
 
 }

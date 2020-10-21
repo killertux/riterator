@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Fuse extends Iterator {
 
@@ -16,14 +15,15 @@ class Fuse extends Iterator {
 		$this->iterator = $iterator;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		if ($this->fused) {
-			return Option::createNone();
+			return null;
 		}
 		$value = $this->iterator->next();
-		if ($value->isNone()) {
+		if ($value === null) {
 			$this->fused = true;
-			return Option::createNone();
+			return $this->next();
 		}
 		return $value;
 	}

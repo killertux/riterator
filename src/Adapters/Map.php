@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Map extends Iterator {
 
@@ -18,12 +17,13 @@ class Map extends Iterator {
 		$this->closure = $closure;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		$value = $this->iterator->next();
 		$closure = &$this->closure;
-		if ($value->isSome()) {
-			return Option::createSome($closure($value->unwrap()));
+		if ($value !== null) {
+			return $closure($value);
 		}
-		return Option::createNone();
+		return null;
 	}
 }

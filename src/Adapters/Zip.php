@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Zip extends Iterator {
 
@@ -18,18 +17,19 @@ class Zip extends Iterator {
 		$this->iterator_2 = $iterator_2;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		$value_1 = $this->iterator_1->next();
-		if ($value_1->isNone()) {
-			return Option::createNone();
+		if ($value_1 === null) {
+			return null;
 		}
 		$value_2 = $this->iterator_2->next();
-		if ($value_2->isNone()) {
-			return Option::createNone();
+		if ($value_2 === null) {
+			return null;
 		}
-		return Option::createSome([
-			$value_1->unwrap(),
-			$value_2->unwrap(),
-		]);
+		return [
+			$value_1,
+			$value_2,
+		];
 	}
 }

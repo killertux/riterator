@@ -3,7 +3,6 @@
 namespace RIterator\PhpAdapters;
 
 use RIterator\Iterator;
-use RIterator\Option;
 
 class GeneratorRIterator extends Iterator {
 
@@ -14,13 +13,15 @@ class GeneratorRIterator extends Iterator {
 		$this->generator = $generator;
 	}
 
-	public function next(): Option {
+	/**
+	 * @inheritDoc
+	 */
+	public function next() {
 		$this->doIteration();
 		if ($this->generator->valid()) {
-			$value = $this->generator->current();
-			return Option::createSome($value);
+			return $this->generator->current();
 		}
-		return Option::createNone();
+		return null;
 	}
 
 	private function doIteration(): void {

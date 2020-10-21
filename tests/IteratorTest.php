@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use RIterator\Option;
 use RIterator\PhpAdapters\GeneratorRIterator;
 
 class IteratorTest extends TestCase {
@@ -21,12 +20,12 @@ class IteratorTest extends TestCase {
 
 	public function testLast(): void {
 		$iterator = $this->createSequenceIterator($limit = 5);
-		Assert::assertEquals(4, $iterator->last()->unwrap());
+		Assert::assertEquals(4, $iterator->last());
 	}
 
 	public function testLastWithAnEmptyGenerator_ShouldReturnNone(): void {
 		$iterator = $this->createSequenceIterator($limit = 0);
-		Assert::assertTrue($iterator->last()->isNone());
+		Assert::assertNull($iterator->last());
 	}
 
 	public function testSum(): void {
@@ -36,10 +35,10 @@ class IteratorTest extends TestCase {
 
 	public function testNth(): void {
 		$iterator = $this->createSequenceIterator($limit = 10);
-		Assert::assertEquals(0, $iterator->nth(0)->unwrap());
-		Assert::assertEquals(1, $iterator->nth(0)->unwrap());
-		Assert::assertEquals(4, $iterator->nth(2)->unwrap());
-		Assert::assertTrue($iterator->nth(10)->isNone());
+		Assert::assertEquals(0, $iterator->nth(0));
+		Assert::assertEquals(1, $iterator->nth(0));
+		Assert::assertEquals(4, $iterator->nth(2));
+		Assert::assertNull($iterator->nth(10));
 	}
 
 	public function testStepBy(): void {
@@ -110,11 +109,11 @@ class IteratorTest extends TestCase {
 
 	public function testFilterMap(): void {
 		$result = $this->createSequenceIterator($limit = 5)
-			->filterMap(function (int $i): Option {
+			->filterMap(function (int $i): ?int {
 				if ($i % 2 === 0) {
-					return Option::createSome($i ** 2);
+					return $i ** 2;
 				}
-				return Option::createNone();
+				return null;
 			})
 			->collect();
 		Assert::assertEquals([0, 4, 16], $result);
@@ -130,11 +129,11 @@ class IteratorTest extends TestCase {
 	public function testPeekable(): void {
 		$iterator = $this->createSequenceIterator($limit = 5)
 			->peekable();
-		Assert::assertEquals(0, $iterator->peek()->unwrap());
-		Assert::assertEquals(0, $iterator->peek()->unwrap());
-		Assert::assertEquals(0, $iterator->next()->unwrap());
-		Assert::assertEquals(1, $iterator->peek()->unwrap());
-		Assert::assertEquals(1, $iterator->peek()->unwrap());
+		Assert::assertEquals(0, $iterator->peek());
+		Assert::assertEquals(0, $iterator->peek());
+		Assert::assertEquals(0, $iterator->next());
+		Assert::assertEquals(1, $iterator->peek());
+		Assert::assertEquals(1, $iterator->peek());
 	}
 
 	public function testSkipWhile(): void {
@@ -171,9 +170,9 @@ class IteratorTest extends TestCase {
 
 	public function testScan(): void {
 		$result = $this->createSequenceIterator($limit = 5)
-			->scan(0, function (&$state, int $value) {
+			->scan(0, function (&$state, int $value): ?int {
 				$state += $value;
-				return Option::createSome(-$state);
+				return -$state;
 			})
 			->collect();
 		Assert::assertEquals([0, -1, -3, -6, -10], $result);
@@ -202,18 +201,17 @@ class IteratorTest extends TestCase {
 	}
 
 	public function testFuse(): void {
-		$values = [Option::createSome(1), Option::createNone(), Option::createSome(3)];
-		$iterator = new IteratorForTests();
-		$iterator->values = $values;
-		self::assertEquals(1, $iterator->next()->unwrap());
-		self::assertTrue($iterator->next()->isNone());
-		self::assertEquals(3, $iterator->next()->unwrap());
+		$values = [1, null, 3];
+		$iterator = new IteratorForTests($values);
+		self::assertEquals(1, $iterator->next());
+		self::assertNull($iterator->next());
+		self::assertEquals(3, $iterator->next());
 
-		$iterator->values = $values;
+		$iterator = new IteratorForTests($values);
 		$iterator = $iterator->fuse();
-		self::assertEquals(1, $iterator->next()->unwrap());
-		self::assertTrue($iterator->next()->isNone());
-		self::assertTrue($iterator->next()->isNone());
+		self::assertEquals(1, $iterator->next());
+		self::assertNull($iterator->next());
+		self::assertNull($iterator->next());
 	}
 
 	public function testInspect(): void {
@@ -281,7 +279,7 @@ class IteratorTest extends TestCase {
 			->find(function (int $i): bool {
 				return $i === 3;
 			});
-		Assert::assertEquals(3, $result->unwrap());
+		Assert::assertEquals(3, $result);
 	}
 
 	public function testFind_ShouldNotFind(): void {
@@ -289,29 +287,29 @@ class IteratorTest extends TestCase {
 			->find(function (int $i): bool {
 				return $i === 5;
 			});
-		Assert::assertTrue($result->isNone());
+		Assert::assertNull($result);
 	}
 
 	public function testFindMap_ShouldFind(): void {
 		$result = $this->createSequenceIterator($limit = 5)
-			->findMap(function (int $i): Option {
+			->findMap(function (int $i): ?int {
 				if ($i === 3) {
-					return Option::createSome($i ** 2);
+					return $i ** 2;
 				}
-				return Option::createNone();
+				return null;
 			});
-		Assert::assertEquals(9, $result->unwrap());
+		Assert::assertEquals(9, $result);
 	}
 
 	public function testFindMap_ShouldNotFind(): void {
 		$result = $this->createSequenceIterator($limit = 5)
-			->findMap(function (int $i): Option {
+			->findMap(function (int $i): ?int {
 				if ($i === 5) {
-					return Option::createSome($i ** 2);
+					return $i ** 2;
 				}
-				return Option::createNone();
+				return null;
 			});
-		Assert::assertTrue($result->isNone());
+		Assert::assertNull($result);
 	}
 
 	public function testPosition_ShouldFind(): void {
@@ -319,7 +317,7 @@ class IteratorTest extends TestCase {
 			->position(function (int $i): int {
 				return $i === 3;
 			});
-		Assert::assertEquals(2, $result->unwrap());
+		Assert::assertEquals(2, $result);
 	}
 
 	public function testPosition_ShouldNotFind(): void {
@@ -327,7 +325,7 @@ class IteratorTest extends TestCase {
 			->position(function (int $i): int {
 				return $i === -1;
 			});
-		Assert::assertTrue($result->isNone());
+		Assert::assertNull($result);
 	}
 
 	private function createSequenceIterator(int $limit): \RIterator\Iterator {

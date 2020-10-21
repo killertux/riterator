@@ -4,7 +4,6 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
-use RIterator\Option;
 
 class Inspect extends Iterator {
 
@@ -18,13 +17,14 @@ class Inspect extends Iterator {
 		$this->closure = $closure;
 	}
 
-	public function next(): Option {
+	/** @inheritDoc */
+	public function next() {
 		$value = $this->iterator->next();
-		if ($value->isSome()) {
+		if ($value !== null) {
 			$closure = &$this->closure;
-			$closure($value->unwrap());
+			$closure($value);
 			return $value;
 		}
-		return Option::createNone();
+		return null;
 	}
 }
