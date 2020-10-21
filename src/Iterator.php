@@ -12,6 +12,7 @@ use RIterator\Adapters\Fuse;
 use RIterator\Adapters\Inspect;
 use RIterator\Adapters\Map;
 use RIterator\Adapters\Peekable;
+use RIterator\Adapters\PHPIterator;
 use RIterator\Adapters\Scan;
 use RIterator\Adapters\Skip;
 use RIterator\Adapters\SkipWhile;
@@ -20,7 +21,7 @@ use RIterator\Adapters\Take;
 use RIterator\Adapters\TakeWhile;
 use RIterator\Adapters\Zip;
 
-abstract class Iterator implements IteratorInterface {
+abstract class Iterator implements IteratorInterface, \IteratorAggregate {
 
 	/**
 	 * @inheritDoc
@@ -205,5 +206,9 @@ abstract class Iterator implements IteratorInterface {
 			$index++;
 		}
 		return null;
+	}
+
+	public function getIterator(): PHPIterator {
+		return new PHPIterator($this);
 	}
 }

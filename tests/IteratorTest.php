@@ -328,6 +328,15 @@ class IteratorTest extends TestCase {
 		Assert::assertNull($result);
 	}
 
+	public function testUseIteratorInAForEach(): void {
+		$iterator = $this->createArrayIterator([1, 2, 3 ,4 ,5]);
+		$sum = 0;
+		foreach ($iterator as $value) {
+			$sum += $value;
+		}
+		Assert::assertEquals(15, $sum);
+	}
+
 	private function createSequenceIterator(int $limit): \RIterator\Iterator {
 		$generator = function (int $limit) {
 			for ($i = 0; $i < $limit; $i++) {
