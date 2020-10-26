@@ -21,12 +21,16 @@ use RIterator\Adapters\Take;
 use RIterator\Adapters\TakeWhile;
 use RIterator\Adapters\Zip;
 
-abstract class Iterator implements IteratorInterface, \IteratorAggregate {
+abstract class Iterator extends IntoIterator implements IteratorInterface, \IteratorAggregate {
 
 	/**
 	 * @inheritDoc
 	 */
 	abstract public function next();
+
+	public function intoIterator(): Iterator {
+		return $this;
+	}
 
 	public function collect(): array {
 		$collect = [];
@@ -208,7 +212,7 @@ abstract class Iterator implements IteratorInterface, \IteratorAggregate {
 		return null;
 	}
 
-	public function getIterator(): PHPIterator {
+	public function getIterator(): \Iterator {
 		return new PHPIterator($this);
 	}
 }
