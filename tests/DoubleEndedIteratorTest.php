@@ -1,11 +1,13 @@
 <?php
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
+use RIterator\PhpAdapters\ArrayRIterator;
 
-class DoubleEndedIteratorTest extends \PHPUnit\Framework\TestCase {
+class DoubleEndedIteratorTest extends TestCase {
 
 	public function testNextAndNextBack(): void {
-		$double_ended_iterator = new \RIterator\PhpAdapters\ArrayRIterator([1, 2, 3 ,4 ,5]);
+		$double_ended_iterator = new ArrayRIterator([1, 2, 3 ,4 ,5]);
 		$this->assertEquals(1, $double_ended_iterator->next());
 		$this->assertEquals(5, $double_ended_iterator->nextBack());
 		$this->assertEquals(2, $double_ended_iterator->next());
@@ -16,13 +18,13 @@ class DoubleEndedIteratorTest extends \PHPUnit\Framework\TestCase {
 	}
 
 	public function testReverse(): void {
-		$result = (new \RIterator\PhpAdapters\ArrayRIterator([1, 2, 3 ,4 ,5]))
+		$result = (new ArrayRIterator([1, 2, 3 ,4 ,5]))
 			->reverse()
 			->collect();
 
 		Assert::assertEquals([5, 4, 3, 2, 1], $result);
 
-		$result = (new \RIterator\PhpAdapters\ArrayRIterator([1, 2, 3 ,4 ,5]))
+		$result = (new ArrayRIterator([1, 2, 3 ,4 ,5]))
 			->reverse()
 			->reverse()
 			->collect();
