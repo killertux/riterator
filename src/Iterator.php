@@ -3,6 +3,8 @@
 namespace RIterator;
 
 use RIterator\Adapters\Chain;
+use RIterator\Adapters\ChunkSize;
+use RIterator\Adapters\ChunkWhile;
 use RIterator\Adapters\Enumerate;
 use RIterator\Adapters\Filter;
 use RIterator\Adapters\FilterMap;
@@ -21,18 +23,21 @@ use RIterator\Adapters\Take;
 use RIterator\Adapters\TakeWhile;
 use RIterator\Adapters\Zip;
 
-abstract class Iterator extends IntoIterator implements IteratorInterface, \IteratorAggregate {
+abstract class Iterator extends IntoIterator implements IteratorInterface, \IteratorAggregate
+{
 
 	/**
 	 * @inheritDoc
 	 */
 	abstract public function next();
 
-	public function intoIterator(): Iterator {
+	public function intoIterator(): Iterator
+	{
 		return $this;
 	}
 
-	public function collect(): array {
+	public function collect(): array
+	{
 		$collect = [];
 		while (($value = $this->next()) !== null) {
 			$collect[] = $value;
@@ -40,7 +45,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return $collect;
 	}
 
-	public function collectAsKeyValue(): array {
+	public function collectAsKeyValue(): array
+	{
 		$collect = [];
 		while (($value = $this->next()) !== null) {
 			[$key, $value] = $value;
@@ -49,7 +55,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return $collect;
 	}
 
-	public function count(): int {
+	public function count(): int
+	{
 		$count = 0;
 		while ($this->next() !== null) {
 			$count++;
@@ -58,7 +65,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	}
 
 	/** @return null|mixed */
-	public function last() {
+	public function last()
+	{
 		$last = null;
 		while (($value = $this->next()) !== null) {
 			$last = $value;
@@ -69,7 +77,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	/**
 	 * @return float|int
 	 */
-	public function sum() {
+	public function sum()
+	{
 		$sum = 0;
 		while (($value = $this->next()) !== null) {
 			$sum += $value;
@@ -77,88 +86,108 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return $sum;
 	}
 
-	public function nth(int $n) {
+	public function nth(int $n)
+	{
 		for ($i = 0; $i < $n; $i++) {
 			$this->next();
 		}
 		return $this->next();
 	}
 
-	public function stepBy(int $n): StepBy {
+	public function stepBy(int $n): StepBy
+	{
 		return new StepBy($this, $n);
 	}
 
-	public function chain(IteratorInterface $iterator): Chain {
+	public function chain(IteratorInterface $iterator): Chain
+	{
 		return new Chain($this, $iterator);
 	}
 
-	public function zip(IteratorInterface $iterator): Zip {
+	public function zip(IteratorInterface $iterator): Zip
+	{
 		return new Zip($this, $iterator);
 	}
 
-	public function map(callable $closure): Map {
+	public function map(callable $closure): Map
+	{
 		return new Map($this, $closure);
 	}
 
-	public function forEach(callable $closure): void {
+	public function forEach (callable $closure): void
+	{
 		while (($value = $this->next()) !== null) {
 			$closure($value);
 		}
 	}
 
-	public function filter(callable $closure): Filter {
+	public function filter(callable $closure): Filter
+	{
 		return new Filter($this, $closure);
 	}
 
-	public function filterMap(callable $closure): FilterMap {
+	public function filterMap(callable $closure): FilterMap
+	{
 		return new FilterMap($this, $closure);
 	}
 
-	public function enumerate(): Enumerate {
+	public function enumerate(): Enumerate
+	{
 		return new Enumerate($this);
 	}
 
-	public function peekable(): Peekable {
+	public function peekable(): Peekable
+	{
 		return new Peekable($this);
 	}
 
-	public function skipWhile(callable $closure): SkipWhile {
+	public function skipWhile(callable $closure): SkipWhile
+	{
 		return new SkipWhile($this, $closure);
 	}
 
-	public function takeWhile(callable $closure): TakeWhile {
+	public function takeWhile(callable $closure): TakeWhile
+	{
 		return new TakeWhile($this, $closure);
 	}
 
-	public function skip(int $n): Skip {
+	public function skip(int $n): Skip
+	{
 		return new Skip($this, $n);
 	}
 
-	public function take(int $n): Take {
+	public function take(int $n): Take
+	{
 		return new Take($this, $n);
 	}
 
-	public function scan($initial_state, callable $closure) : Scan {
+	public function scan($initial_state, callable $closure): Scan
+	{
 		return new Scan($this, $closure, $initial_state);
 	}
 
-	public function flatten(): Flatten {
+	public function flatten(): Flatten
+	{
 		return new Flatten($this);
 	}
 
-	public function flatMap(callable $closure): FlatMap {
+	public function flatMap(callable $closure): FlatMap
+	{
 		return new FlatMap($this, $closure);
 	}
 
-	public function fuse(): Fuse {
+	public function fuse(): Fuse
+	{
 		return new Fuse($this);
 	}
 
-	public function inspect(callable $closure): Inspect {
+	public function inspect(callable $closure): Inspect
+	{
 		return new Inspect($this, $closure);
 	}
 
-	public function partition(callable $closure): array {
+	public function partition(callable $closure): array
+	{
 		$partition_true = [];
 		$partition_false = [];
 		while (($value = $this->next()) !== null) {
@@ -171,14 +200,16 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return [$partition_true, $partition_false];
 	}
 
-	public function fold($acc, callable $closure) {
+	public function fold($acc, callable $closure)
+	{
 		while (($value = $this->next()) !== null) {
 			$acc = $closure($acc, $value);
 		}
 		return $acc;
 	}
 
-	public function all(callable $closure): bool {
+	public function all(callable $closure): bool
+	{
 		while (($value = $this->next()) !== null) {
 			if (!$closure($value)) {
 				return false;
@@ -187,7 +218,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return true;
 	}
 
-	public function any(callable $closure): bool {
+	public function any(callable $closure): bool
+	{
 		while (($value = $this->next()) !== null) {
 			if ($closure($value)) {
 				return true;
@@ -196,7 +228,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return false;
 	}
 
-	public function find(callable $closure) {
+	public function find(callable $closure)
+	{
 		while (($value = $this->next()) !== null) {
 			if ($closure($value)) {
 				return $value;
@@ -205,12 +238,14 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return null;
 	}
 
-	public function findMap(callable $closure) {
+	public function findMap(callable $closure)
+	{
 		return (new FilterMap($this, $closure))
 			->next();
 	}
 
-	public function position(callable $closure) {
+	public function position(callable $closure)
+	{
 		$index = 0;
 		while (($value = $this->next()) !== null) {
 			if ($closure($value)) {
@@ -221,7 +256,18 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return null;
 	}
 
-	public function getIterator(): \Iterator {
+	public function chunk(int $size): ChunkSize
+	{
+		return new ChunkSize($this, $size);
+	}
+
+	public function chunkWhile(callable $callable): ChunkWhile
+	{
+		return new ChunkWhile($this, $callable);
+	}
+
+	public function getIterator(): \Iterator
+	{
 		return new PHPIterator($this);
 	}
 }

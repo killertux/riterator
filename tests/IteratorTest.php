@@ -384,6 +384,24 @@ class IteratorTest extends TestCase
 		Assert::assertEquals(15, $sum);
 	}
 
+	public function testChunkSize(): void
+	{
+		$result = $this->createSequenceIterator(10)
+			->chunk(3)
+			->collect();
+
+		Assert::assertEquals([[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]], $result);
+	}
+
+	public function testChunkWhile(): void
+	{
+		$result = $this->createSequenceIterator(10)
+			->chunkWhile(fn(int $value) => (int) ($value / 4))
+			->collect();
+
+		Assert::assertEquals([[0, 1, 2, 3], [4, 5, 6, 7], [8, 9]], $result);
+	}
+
 	private function createSequenceIterator(int $limit): \RIterator\Iterator
 	{
 		$generator = function (int $limit) {
