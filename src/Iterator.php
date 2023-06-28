@@ -40,6 +40,15 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return $collect;
 	}
 
+	public function collectAsKeyValue(): array {
+		$collect = [];
+		while (($value = $this->next()) !== null) {
+			[$key, $value] = $value;
+			$collect[$key] = $value;
+		}
+		return $collect;
+	}
+
 	public function count(): int {
 		$count = 0;
 		while ($this->next() !== null) {
