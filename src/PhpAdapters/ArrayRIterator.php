@@ -15,7 +15,7 @@ class ArrayRIterator extends DoubleEndedIterator {
 	/**
 	 * @inheritDoc
 	 */
-	public function next() {
+	public function next(): mixed {
 		$first_key = array_key_first($this->array);
 		return $this->getValueAndRemoveItFromKey($first_key);
 	}
@@ -23,7 +23,7 @@ class ArrayRIterator extends DoubleEndedIterator {
 	/**
 	 * @inheritDoc
 	 */
-	public function nextBack() {
+	public function nextBack(): mixed {
 		$last_key = array_key_last($this->array);
 		return $this->getValueAndRemoveItFromKey($last_key);
 	}

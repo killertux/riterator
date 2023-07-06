@@ -11,5 +11,5 @@ interface DoubleEndedIteratorInterface extends IteratorInterface {
 	 *
 	 * @return null|mixed
 	 */
-	public function nextBack();
+	public function nextBack(): mixed;
 }

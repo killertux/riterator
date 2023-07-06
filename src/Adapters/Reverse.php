@@ -15,12 +15,12 @@ class Reverse extends DoubleEndedIterator {
 	}
 
 	/** @inheritDoc */
-	public function nextBack() {
+	public function nextBack(): mixed {
 		return $this->iterator->next();
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		return $this->iterator->nextBack();
 	}
 }

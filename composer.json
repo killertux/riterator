@@ -9,7 +9,7 @@
             "email": "bruno.canguru@hotmail.com"
         }
     ],
-    "version": "0.5.0",
+    "version": "0.5.1",
     "autoload": {
         "psr-4": {
             "RIterator\\": "src/"
