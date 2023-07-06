@@ -18,7 +18,7 @@ class FilterMap extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		$closure = &$this->closure;
 		while (($value = $this->iterator->next()) !== null) {
 			$mapped_value = $closure($value);

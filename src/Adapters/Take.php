@@ -19,7 +19,7 @@ class Take extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if ($this->should_take) {
 			$value = $this->iterator->next();
 			$this->n--;

@@ -22,7 +22,7 @@ class Flatten extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if ($this->flattening) {
 			return $this->handleFlattening();
 		}

@@ -18,7 +18,7 @@ class Map extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		$value = $this->iterator->next();
 		$closure = &$this->closure;
 		if ($value !== null) {

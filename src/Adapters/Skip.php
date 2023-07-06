@@ -19,7 +19,7 @@ class Skip extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if ($this->should_skip) {
 			$this->should_skip = false;
 			for ($i = 0; $i < $this->n; $i++) {

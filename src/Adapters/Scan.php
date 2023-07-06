@@ -21,7 +21,7 @@ class Scan extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if (($value = $this->iterator->next()) !== null) {
 			$closure = &$this->closure;
 			$initial_state = &$this->initial_state;

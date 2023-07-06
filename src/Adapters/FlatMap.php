@@ -15,7 +15,7 @@ class FlatMap extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		return $this->iterator->next();
 	}
 }

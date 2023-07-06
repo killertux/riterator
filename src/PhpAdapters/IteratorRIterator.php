@@ -14,7 +14,7 @@ class IteratorRIterator extends Iterator {
 		$this->iterator = $iterator;
 	}
 
-	public function next() {
+	public function next(): mixed {
 		$this->doIteration();
 		if ($this->iterator->valid()) {
 			return $this->iterator->current();

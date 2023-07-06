@@ -18,7 +18,7 @@ class Peekable extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next() :mixed {
 		if ($this->next_value === null) {
 			$this->next_value = $this->iterator->next();
 		}
@@ -28,7 +28,7 @@ class Peekable extends Iterator {
 	}
 
 	/** @return null|mixed */
-	public function peek() {
+	public function peek(): mixed {
 		if ($this->next_value === null) {
 			$this->next_value = $this->iterator->next();
 		}

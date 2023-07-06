@@ -17,7 +17,7 @@ class ChunkWhile extends Iterator
     }
 
     /** @inheritDoc */
-    public function next()
+    public function next(): mixed
     {
         $callable = $this->callable;
         $first_value = $this->iterator->next();

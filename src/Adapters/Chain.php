@@ -19,7 +19,7 @@ class Chain extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if (!$this->first_iterator_finished) {
 			return $this->getNextFromFirstIterator();
 		}

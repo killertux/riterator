@@ -19,7 +19,7 @@ class SkipWhile extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if ($this->skipping) {
 			return $this->handleSkipping();
 		}

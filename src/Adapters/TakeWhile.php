@@ -19,7 +19,7 @@ class TakeWhile extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if (!$this->taking) {
 			return null;
 		}

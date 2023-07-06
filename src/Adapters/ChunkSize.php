@@ -17,10 +17,10 @@ class ChunkSize extends Iterator
     }
 
     /** @inheritDoc */
-    public function next()
+    public function next(): mixed
     {
-        $chunk = [];
-        while (($value = $this->iterator->next()) != null) {
+        $chunk = null;
+        while (($value = $this->iterator->next()) !== null) {
             $chunk[] = $value;
             if (count($chunk) == $this->size) {
                 return $chunk;

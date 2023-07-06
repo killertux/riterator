@@ -18,7 +18,7 @@ class Inspect extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		$value = $this->iterator->next();
 		if ($value !== null) {
 			$closure = &$this->closure;

@@ -22,7 +22,7 @@ class StepBy extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if ($this->first_iteration) {
 			$this->first_iteration = false;
 			return $this->iterator->next();

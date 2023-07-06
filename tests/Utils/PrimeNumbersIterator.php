@@ -15,7 +15,7 @@ class PrimeNumbersIterator extends Iterator {
 		$this->current_number = 0;
 	}
 
-	public function next() {
+	public function next(): ?int {
 		$divisions = 0;
 		$this->current_number++;
 		if ($this->limit <= 0) {

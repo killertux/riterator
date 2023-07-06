@@ -16,7 +16,7 @@ class GeneratorRIterator extends Iterator {
 	/**
 	 * @inheritDoc
 	 */
-	public function next() {
+	public function next(): mixed {
 		$this->doIteration();
 		if ($this->generator->valid()) {
 			return $this->generator->current();

@@ -8,7 +8,7 @@ class IteratorForTests extends \RIterator\Iterator {
 		$this->values = $values;
 	}
 
-	public function next() {
+	public function next(): mixed {
 		return array_shift($this->values);
 	}
 }

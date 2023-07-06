@@ -18,7 +18,7 @@ class Zip extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		$value_1 = $this->iterator_1->next();
 		if ($value_1 === null) {
 			return null;

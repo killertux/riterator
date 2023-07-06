@@ -16,7 +16,7 @@ class Fuse extends Iterator {
 	}
 
 	/** @inheritDoc */
-	public function next() {
+	public function next(): mixed {
 		if ($this->fused) {
 			return null;
 		}
