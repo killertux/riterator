@@ -29,7 +29,7 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	/**
 	 * @inheritDoc
 	 */
-	abstract public function next();
+	abstract public function next(): mixed;
 
 	public function intoIterator(): Iterator
 	{

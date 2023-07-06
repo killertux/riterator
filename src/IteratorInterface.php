@@ -11,5 +11,5 @@ interface IteratorInterface {
 	 *
 	 * @return null|mixed
 	 */
-	public function next();
+	public function next(): mixed;
 } 

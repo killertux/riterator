@@ -15,23 +15,23 @@ class PHPIterator implements \Iterator {
 		$this->internal_iterator = $iterator;
 	}
 
-	public function current() {
+	public function current(): mixed {
 		return $this->current_value;
 	}
 
-	public function next() {
+	public function next(): void {
 		$this->current_value = $this->internal_iterator->next();
 	}
 
-	public function key() {
+	public function key(): mixed {
 		return ++$this->key;
 	}
 
-	public function valid() {
+	public function valid(): bool {
 		return $this->current_value !== null;
 	}
 
-	public function rewind() {
+	public function rewind(): void {
 		$this->current_value = $this->internal_iterator->next();
 	}
 }
