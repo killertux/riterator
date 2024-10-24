@@ -4,89 +4,60 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\None;
+use RIterator\Option;
 use RIterator\PhpAdapters\ArrayRIterator;
-use RIterator\PhpAdapters\GeneratorRIterator;
 use RIterator\PhpAdapters\IteratorRIterator;
+use RIterator\Some;
 
 class Flatten extends Iterator {
 
-	/** @var IteratorInterface */
-	private $iterator;
 	/** @var bool  */
 	private $flattening = false;
 	/** @var IteratorInterface  */
-	private $temp_iterator = null;
+	private $current_iterator = null;
 
-	public function __construct(IteratorInterface $iterator) {
-		$this->iterator = $iterator;
+	public function __construct(private readonly IteratorInterface $iterator) {
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
-		if ($this->flattening) {
-			return $this->handleFlattening();
+	public function next(): Option {
+		if ($this->current_iterator === null) {
+			$iterator = $this->iterator->next();
+			if ($iterator->isNone()) {
+				return new None();
+			}
+			$this->current_iterator = $this->convertIterator($iterator->unwrap());
 		}
-		$value = $this->iterator->next();
-		if ($value !== null) {
-			return $this->returnValueOrHandleFlattening($value);
+		$value = $this->current_iterator->next();
+		if ($value->isNone()) {
+			$new_iterator = $this->iterator->next();
+			if ($new_iterator->isNone()) {
+				return new None();
+			}
+			$this->current_iterator = $this->convertIterator($new_iterator->unwrap());
+			return $this->next();
 		}
-		return null;
+		return new Some($value->unwrap());
 	}
 
-	private function returnValueOrHandleFlattening($value) {
+	private function convertIterator($value): IteratorInterface {
+		if ($value instanceof IteratorInterface) {
+			return $value;
+		}
+
 		if (is_array($value)) {
-			$this->setUpArrayFlattening($value);
-			return $this->handleFlattening();
+			return new ArrayRIterator($value);
 		}
 
 		if ($value instanceof \Iterator) {
-			$this->setUpIteratorFlattening($value);
-			return $this->handleFlattening();
+			return new IteratorRIterator($value);
 		}
 
 		if ($value instanceof \IteratorAggregate) {
-			$this->setUpIteratorAggregateFlattening($value);
-			return $this->handleFlattening();
+			return new IteratorRIterator($value->getIterator());
 		}
 
-		if ($value instanceof IteratorInterface) {
-			$this->setUpRIteratorFlattening($value);
-			return $this->handleFlattening();
-		}
-		return $value;
-	}
-
-	private function handleFlattening() {
-		$value = $this->temp_iterator->next();
-		if ($value === null) {
-			$this->flattening = false;
-			return $this->next();
-		}
-		return $value;
-	}
-
-	private function setUpArrayFlattening(array $value): void {
-		$this->flattening = true;
-		$this->temp_iterator = new ArrayRIterator($value);
-	}
-
-	private function setUpIteratorFlattening(\Iterator $value): void {
-		$this->flattening = true;
-		$this->temp_iterator = new IteratorRIterator($value);
-	}
-
-	private function setUpIteratorAggregateFlattening(\IteratorAggregate $value): void {
-		$generator = function (\Traversable $t) {
-			foreach ($t as $value) {
-				yield $value;
-			}
-		};
-		$this->flattening = true;
-		$this->temp_iterator = new GeneratorRIterator($generator($value));
-	}
-
-	private function setUpRIteratorFlattening(IteratorInterface $value): void {
-		$this->flattening = true;
-		$this->temp_iterator = $value;
+		return new ArrayRIterator([$value]);
 	}
 }

@@ -4,6 +4,9 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\None;
+use RIterator\Option;
+use RIterator\Some;
 
 class ChunkWhile extends Iterator
 {
@@ -17,21 +20,25 @@ class ChunkWhile extends Iterator
     }
 
     /** @inheritDoc */
-    public function next(): mixed
+    public function next(): Option
     {
-        $callable = $this->callable;
+        $callable = &$this->callable;
         $first_value = $this->iterator->next();
-        if ($first_value === null) {
-            return null;
+        if ($first_value->isNone()) {
+            return $first_value;
         }
+		$first_value = $first_value->unwrap();
         $old_check = $callable($first_value);
         $chunk[] = $first_value;
-        while (($value = $this->iterator->peek()) != null) {
-            if ($old_check !== $callable($value)) {
-                return $chunk;
+        while (($value = $this->iterator->peek())->isSome()) {
+            if ($old_check !== $callable($value->unwrap())) {
+                return new Some($chunk);
             }
-            $chunk[] = $this->iterator->next();
+            $chunk[] = $this->iterator->next()->unwrap();
         }
-        return $chunk;
+		if (!empty($chunk)) {
+			return new Some($chunk);
+		}
+        return new None();
     }
 }

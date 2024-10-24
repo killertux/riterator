@@ -9,7 +9,12 @@
             "email": "bruno.canguru@hotmail.com"
         }
     ],
-    "version": "0.5.2",
+    "config": {
+        "platform": {
+            "php": "8.3"
+        }
+    },
+    "version": "0.6.0",
     "autoload": {
         "psr-4": {
             "RIterator\\": "src/"

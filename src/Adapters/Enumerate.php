@@ -4,24 +4,22 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\None;
+use RIterator\Option;
+use RIterator\Some;
 
 class Enumerate extends Iterator {
+	private int $enumeration = 0;
 
-	/** @var int */
-	private $enumeration = 0;
-	/** @var IteratorInterface */
-	private $iterator;
-
-	public function __construct(IteratorInterface $iterator) {
-		$this->iterator = $iterator;
+	public function __construct(private readonly IteratorInterface $iterator) {
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		$value = $this->iterator->next();
-		if ($value !== null) {
-			return [$this->enumeration++, $value];
+		if ($value->isSome()) {
+			return new Some([$this->enumeration++, $value->unwrap()]);
 		}
-		return null;
+		return new None();
 	}
 }

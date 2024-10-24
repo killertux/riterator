@@ -7,9 +7,9 @@ interface IteratorInterface {
 	/**
 	 * Advances the iterator and return the next value.
 	 *
-	 * Return null if the iteration is finished.
+	 * Return None if the iteration is finished.
 	 *
-	 * @return null|mixed
+	 * @return Option|None|Some
 	 */
-	public function next(): mixed;
+	public function next(): Option;
 } 

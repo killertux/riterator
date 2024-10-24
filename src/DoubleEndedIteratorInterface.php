@@ -9,7 +9,7 @@ interface DoubleEndedIteratorInterface extends IteratorInterface {
 	 *
 	 * Return and None option if the iteration is finished.
 	 *
-	 * @return null|mixed
+	 * @return Option
 	 */
-	public function nextBack(): mixed;
+	public function nextBack(): Option;
 }

@@ -4,27 +4,25 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\None;
+use RIterator\Option;
 
 class Filter extends Iterator {
-
-	/** @var IteratorInterface */
-	private $iterator;
 	/** @var callable */
 	private $closure;
 
-	public function __construct(IteratorInterface $iterator, callable $closure) {
-		$this->iterator = $iterator;
+	public function __construct(private IteratorInterface $iterator, callable $closure) {
 		$this->closure = $closure;
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		$closure = &$this->closure;
-		while (($value = $this->iterator->next()) !== null) {
-			if ($closure($value)) {
+		while (($value = $this->iterator->next())->isSome()) {
+			if ($closure($value->unwrap())) {
 				return $value;
 			}
 		}
-		return null;
+		return new None();
 	}
 }

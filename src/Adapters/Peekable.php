@@ -8,27 +8,23 @@ use RIterator\Option;
 
 class Peekable extends Iterator {
 
-	/** @var IteratorInterface */
-	private $iterator;
-	private $next_value;
+	private mixed $next_value;
 
-	public function __construct(IteratorInterface $iterator) {
-		$this->iterator = $iterator;
+	public function __construct(private readonly IteratorInterface $iterator) {
 		$this->next_value = null;
 	}
 
 	/** @inheritDoc */
-	public function next() :mixed {
+	public function next(): Option {
 		if ($this->next_value === null) {
-			$this->next_value = $this->iterator->next();
+			return $this->iterator->next();
 		}
 		$next_value = $this->next_value;
 		$this->next_value = null;
 		return $next_value;
 	}
 
-	/** @return null|mixed */
-	public function peek(): mixed {
+	public function peek(): Option {
 		if ($this->next_value === null) {
 			$this->next_value = $this->iterator->next();
 		}

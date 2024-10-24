@@ -4,26 +4,24 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\None;
+use RIterator\Option;
 
 class Fuse extends Iterator {
+	private bool $fused = false;
 
-	/** @var IteratorInterface */
-	private $iterator;
-	private $fused = false;
-
-	public function __construct(IteratorInterface $iterator) {
-		$this->iterator = $iterator;
+	public function __construct(private readonly IteratorInterface $iterator) {
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		if ($this->fused) {
-			return null;
+			return new None();
 		}
 		$value = $this->iterator->next();
-		if ($value === null) {
+		if ($value->isNone()) {
 			$this->fused = true;
-			return $this->next();
+			return $value;
 		}
 		return $value;
 	}

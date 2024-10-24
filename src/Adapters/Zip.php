@@ -4,32 +4,27 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\Option;
+use RIterator\Some;
 
 class Zip extends Iterator {
 
-	/** @var IteratorInterface */
-	private $iterator_1;
-	/** @var IteratorInterface */
-	private $iterator_2;
-
-	public function __construct(IteratorInterface $iterator_1, IteratorInterface $iterator_2) {
-		$this->iterator_1 = $iterator_1;
-		$this->iterator_2 = $iterator_2;
+	public function __construct(private readonly IteratorInterface $iterator_1, private readonly IteratorInterface $iterator_2) {
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		$value_1 = $this->iterator_1->next();
-		if ($value_1 === null) {
-			return null;
+		if ($value_1->isNone()) {
+			return $value_1;
 		}
 		$value_2 = $this->iterator_2->next();
-		if ($value_2 === null) {
-			return null;
+		if ($value_2->isNone()) {
+			return $value_2;
 		}
-		return [
-			$value_1,
-			$value_2,
-		];
+		return new Some([
+			$value_1->unwrap(),
+			$value_2->unwrap(),
+		]);
 	}
 }

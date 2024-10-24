@@ -29,7 +29,7 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	/**
 	 * @inheritDoc
 	 */
-	abstract public function next(): mixed;
+	abstract public function next(): Option;
 
 	public function intoIterator(): Iterator
 	{
@@ -39,8 +39,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	public function collect(): array
 	{
 		$collect = [];
-		while (($value = $this->next()) !== null) {
-			$collect[] = $value;
+		while (($value = $this->next())->isSome()) {
+			$collect[] = $value->unwrap();
 		}
 		return $collect;
 	}
@@ -48,8 +48,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	public function collectAsKeyValue(): array
 	{
 		$collect = [];
-		while (($value = $this->next()) !== null) {
-			[$key, $value] = $value;
+		while (($value = $this->next())->isSome()) {
+			[$key, $value] = $value->unwrap();
 			$collect[$key] = $value;
 		}
 		return $collect;
@@ -58,35 +58,31 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	public function count(): int
 	{
 		$count = 0;
-		while ($this->next() !== null) {
+		while ($this->next()->isSome()) {
 			$count++;
 		}
 		return $count;
 	}
 
-	/** @return null|mixed */
-	public function last()
+	public function last(): Option
 	{
-		$last = null;
-		while (($value = $this->next()) !== null) {
+		$last = new None();
+		while (($value = $this->next())->isSome()) {
 			$last = $value;
 		}
 		return $last;
 	}
 
-	/**
-	 * @return float|int
-	 */
-	public function sum()
+	public function sum(): float|int
 	{
 		$sum = 0;
-		while (($value = $this->next()) !== null) {
-			$sum += $value;
+		while (($value = $this->next())->isSome()) {
+			$sum += $value->unwrap();
 		}
 		return $sum;
 	}
 
-	public function nth(int $n)
+	public function nth(int $n): Option
 	{
 		for ($i = 0; $i < $n; $i++) {
 			$this->next();
@@ -116,8 +112,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 
 	public function forEach (callable $closure): void
 	{
-		while (($value = $this->next()) !== null) {
-			$closure($value);
+		while (($value = $this->next())->isSome()) {
+			$closure($value->unwrap());
 		}
 	}
 
@@ -190,7 +186,8 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 	{
 		$partition_true = [];
 		$partition_false = [];
-		while (($value = $this->next()) !== null) {
+		while (($value = $this->next())->isSome()) {
+			$value = $value->unwrap();
 			if ($closure($value)) {
 				$partition_true[] = $value;
 			} else {
@@ -200,18 +197,17 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 		return [$partition_true, $partition_false];
 	}
 
-	public function fold($acc, callable $closure)
-	{
-		while (($value = $this->next()) !== null) {
-			$acc = $closure($acc, $value);
+	public function fold($acc, callable $closure): mixed{
+		while (($value = $this->next())->isSome()) {
+			$acc = $closure($acc, $value->unwrap());
 		}
 		return $acc;
 	}
 
 	public function all(callable $closure): bool
 	{
-		while (($value = $this->next()) !== null) {
-			if (!$closure($value)) {
+		while (($value = $this->next())->isSome()) {
+			if (!$closure($value->unwrap())) {
 				return false;
 			}
 		}
@@ -220,40 +216,40 @@ abstract class Iterator extends IntoIterator implements IteratorInterface, \Iter
 
 	public function any(callable $closure): bool
 	{
-		while (($value = $this->next()) !== null) {
-			if ($closure($value)) {
+		while (($value = $this->next())->isSome()) {
+			if ($closure($value->unwrap())) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public function find(callable $closure)
+	public function find(callable $closure): Option
 	{
-		while (($value = $this->next()) !== null) {
-			if ($closure($value)) {
+		while (($value = $this->next())->isSome()) {
+			if ($closure($value->unwrap())) {
 				return $value;
 			}
 		}
-		return null;
+		return $value;
 	}
 
-	public function findMap(callable $closure)
+	public function findMap(callable $closure): Option
 	{
 		return (new FilterMap($this, $closure))
 			->next();
 	}
 
-	public function position(callable $closure)
+	public function position(callable $closure): Option
 	{
 		$index = 0;
-		while (($value = $this->next()) !== null) {
-			if ($closure($value)) {
-				return $index;
+		while (($value = $this->next())->isSome()) {
+			if ($closure($value->unwrap())) {
+				return new Some($index);
 			}
 			$index++;
 		}
-		return null;
+		return $value;
 	}
 
 	public function chunk(int $size): ChunkSize

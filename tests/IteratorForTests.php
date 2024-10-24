@@ -1,5 +1,7 @@
 <?php
 
+use RIterator\Option;
+
 class IteratorForTests extends \RIterator\Iterator {
 
 	private $values;
@@ -8,7 +10,7 @@ class IteratorForTests extends \RIterator\Iterator {
 		$this->values = $values;
 	}
 
-	public function next(): mixed {
+	public function next(): Option {
 		return array_shift($this->values);
 	}
 }

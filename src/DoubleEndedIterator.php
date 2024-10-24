@@ -9,12 +9,12 @@ abstract class DoubleEndedIterator extends Iterator implements DoubleEndedIterat
 	/**
 	 * @inheritDoc
 	 */
-	abstract public function nextBack(): mixed;
+	abstract public function nextBack(): Option;
 
 	/**
 	 * @inheritDoc
 	 */
-	abstract public function next(): mixed;
+	abstract public function next(): Option;
 
 	public function reverse(): Reverse {
 		return new Reverse($this);

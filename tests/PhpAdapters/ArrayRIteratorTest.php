@@ -4,7 +4,9 @@ namespace PhpAdapters;
 
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use RIterator\None;
 use RIterator\PhpAdapters\ArrayRIterator;
+use RIterator\Some;
 
 class ArrayRIteratorTest extends TestCase {
 
@@ -17,14 +19,9 @@ class ArrayRIteratorTest extends TestCase {
 	public function testArrayWithNulls(): void {
 		$array = [1, 2, null ,4];
 		$iterator = new ArrayRIterator($array);
-		Assert::assertEquals(1, $iterator->next());
-		Assert::assertEquals(2, $iterator->next());
-		Assert::assertEquals(null, $iterator->next());
-		Assert::assertEquals(4, $iterator->next());
-	}
-
-	public function testCollectArrayWithNulls_WillFuse(): void {
-		$array = [1, 2, null ,4];
-		Assert::assertEquals([1, 2], (new ArrayRIterator($array))->collect());
+		Assert::assertEquals(new Some(1), $iterator->next());
+		Assert::assertEquals(new Some(2), $iterator->next());
+		Assert::assertEquals(new Some(null), $iterator->next());
+		Assert::assertEquals(new Some(4), $iterator->next());
 	}
 }

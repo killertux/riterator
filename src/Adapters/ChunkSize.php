@@ -4,28 +4,26 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\None;
+use RIterator\Option;
+use RIterator\Some;
 
 class ChunkSize extends Iterator
 {
-    private IteratorInterface $iterator;
-    private int $size;
-
-    public function __construct(IteratorInterface $iterator, int $size)
-    {
-        $this->iterator = $iterator;
-        $this->size = $size;
-    }
+    public function __construct(private readonly IteratorInterface $iterator, private readonly int $size) {}
 
     /** @inheritDoc */
-    public function next(): mixed
-    {
-        $chunk = null;
-        while (($value = $this->iterator->next()) !== null) {
-            $chunk[] = $value;
+    public function next(): Option {
+        $chunk = [];
+        while (($value = $this->iterator->next())->isSome()) {
+            $chunk[] = $value->unwrap();
             if (count($chunk) == $this->size) {
-                return $chunk;
+                return new Some($chunk);
             }
         }
-        return $chunk;
+		if (!empty($chunk)) {
+			return new Some($chunk);
+		}
+        return new None();
     }
 }

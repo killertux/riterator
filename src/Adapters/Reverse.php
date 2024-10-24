@@ -4,23 +4,20 @@ namespace RIterator\Adapters;
 
 use RIterator\DoubleEndedIterator;
 use RIterator\DoubleEndedIteratorInterface;
+use RIterator\Option;
 
 class Reverse extends DoubleEndedIterator {
 
-	/** @var DoubleEndedIteratorInterface */
-	private $iterator;
-
-	public function __construct(DoubleEndedIteratorInterface $iterator) {
-		$this->iterator = $iterator;
+	public function __construct(private readonly DoubleEndedIteratorInterface $iterator) {
 	}
 
 	/** @inheritDoc */
-	public function nextBack(): mixed {
+	public function nextBack(): Option {
 		return $this->iterator->next();
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		return $this->iterator->nextBack();
 	}
 }

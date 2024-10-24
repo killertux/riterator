@@ -4,26 +4,20 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\Option;
 
 class Map extends Iterator {
-
-	/** @var IteratorInterface */
-	private $iterator;
 	/** @var callable */
 	private $closure;
 
-	public function __construct(IteratorInterface $iterator, callable $closure) {
-		$this->iterator = $iterator;
+	public function __construct(private readonly IteratorInterface $iterator, callable $closure) {
 		$this->closure = $closure;
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		$value = $this->iterator->next();
 		$closure = &$this->closure;
-		if ($value !== null) {
-			return $closure($value);
-		}
-		return null;
+		return $value->map($closure);
 	}
 }

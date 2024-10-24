@@ -4,36 +4,34 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\Option;
 
 class SkipWhile extends Iterator {
 
-	/** @var IteratorInterface */
-	private $iterator;
 	/** @var callable */
 	private $closure;
-	private $skipping = true;
+	private bool $skipping = true;
 
-	public function __construct(IteratorInterface $iterator, callable $closure) {
-		$this->iterator = $iterator;
+	public function __construct(private readonly IteratorInterface $iterator, callable $closure) {
 		$this->closure = $closure;
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		if ($this->skipping) {
 			return $this->handleSkipping();
 		}
 		return $this->iterator->next();
 	}
 
-	private function handleSkipping() {
+	private function handleSkipping(): Option {
 		$closure = &$this->closure;
 		do {
 			$value = $this->iterator->next();
-			if ($value === null) {
+			if ($value->isNone()) {
 				break;
 			}
-		} while ($closure($value));
+		} while ($closure($value->unwrap()));
 		$this->skipping = false;
 		return $value;
 	}

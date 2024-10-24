@@ -4,31 +4,33 @@ namespace RIterator\Adapters;
 
 use RIterator\Iterator;
 use RIterator\IteratorInterface;
+use RIterator\None;
+use RIterator\Option;
 
 class TakeWhile extends Iterator {
-
-	/** @var IteratorInterface */
-	private $iterator;
 	/** @var callable */
 	private $closure;
-	private $taking = true;
+	private bool $taking = true;
 
-	public function __construct(IteratorInterface $iterator, callable $closure) {
-		$this->iterator = $iterator;
+	public function __construct(private IteratorInterface $iterator, callable $closure) {
 		$this->closure = $closure;
 	}
 
 	/** @inheritDoc */
-	public function next(): mixed {
+	public function next(): Option {
 		if (!$this->taking) {
-			return null;
+			return new None();
 		}
 		$closure = &$this->closure;
 		$value = $this->iterator->next();
-		if ($closure($value)) {
+		if ($value->isNone()) {
+			$this->taking = false;
+			return $value;
+		}
+		if ($closure($value->unwrap())) {
 			return $value;
 		}
 		$this->taking = false;
-		return null;
+		return new None();
 	}
 }
